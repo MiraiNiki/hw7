@@ -40,7 +40,11 @@ class Game:
 				if self.NextBoardPosition(move):
 					if len(moves) != 0:
 						if self.getPosPoint(move) > self.getPosPoint(moves[0]):
-							moves.insert(0,move) 
+							moves.insert(0,move)
+						elif self.getPosPoint(move) < self.getPosPoint(moves[len(moves)-1]):
+							moves.append(move)
+						else:
+							moves.insert(1,move) 
 					else:
 						moves.append(move)
 						
