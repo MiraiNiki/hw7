@@ -32,19 +32,39 @@ class Game:
 	#   "Where": [x,y]
 	#   "As": player number
 	def ValidMoves(self):
-                moves = []
-                for y in xrange(1,9):
-                        for x in xrange(1,9):
-                                move = {"Where": [x,y],
-                                        "As": self.Next()}
-                                if self.NextBoardPosition(move):
-                                        moves.append(move)
-                return moves
+		moves = []
+		for y in xrange(1,9):
+			for x in xrange(1,9):
+				move = {"Where": [x,y],
+						"As": self.Next()}
+				if self.NextBoardPosition(move):
+					if len(moves) != 0:
+						if self.getPosPoint(move) > self.getPosPoint(moves[0]):
+							moves.insert(0,move) 
+					else:
+						moves.append(move)
+						
+		return moves
 
 	# Helper function of NextBoardPosition.  It looks towards
 	# (delta_x, delta_y) direction for one of our own pieces and
 	# flips pieces in between if the move is valid. Returns True
 	# if pieces are captured in this direction, False otherwise.
+
+	def getPosPoint(self, move):
+		point = [[10,3,5,5,5,5,3,10],
+				[3,-10,-5,-5,-5,-5,-10,3],
+				[5,-5,3,3,3,3,-5,5],
+				[5,-5,3,0,0,3,-5,5],
+				[5,-5,3,0,0,3,-5,5],
+				[5,-5,3,3,3,3,-5,5],
+				[3,-10,-5,-5,-5,-5,-10,3],
+				[10,3,5,5,5,5,3,10]]
+		x = move["Where"][0]
+		y = move["Where"][1]
+		return point[x-1][y-1]	
+
+
 	def __UpdateBoardDirection(self, new_board, x, y, delta_x, delta_y):
 		player = self.Next()
 		opponent = 3 - player
@@ -161,7 +181,7 @@ Paste JSON here:<p/><textarea name=json cols=80 rows=24></textarea>
                 # TO STEP STUDENTS:
                 # You'll probably want to change how this works, to do something
                 # more clever than just picking a random move.
-	    	move = random.choice(valid_moves)
+	    	move = valid_moves[0]
     		self.response.write(PrettyMove(move))
 
 app = webapp2.WSGIApplication([
